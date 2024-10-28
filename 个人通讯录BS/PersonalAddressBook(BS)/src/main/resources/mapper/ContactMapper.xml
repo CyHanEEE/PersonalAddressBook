@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.springboot.PersonalAddressBook.contacts.mapper.ContactsMapper">
+
+
+    <resultMap id="BaseResultMap" type="com.springboot.PersonalAddressBook.contacts.entity.Contact">
+        <id column="Id" property="id" />
+        <result column="Name" property="name" />
+        <result column="Address" property="address" />
+        <result column="Phone" property="phone" />
+    </resultMap>
+
+
+    <sql id="Base_Column_List">
+        Id, Name, Address, Phone
+    </sql>
+
+    <!--查询联系人-->
+    <select id="selectContactPage" resultMap="BaseResultMap">
+        SELECT * FROM contact
+        where 1=1
+        <if test="contactPage.Name != null and contactPage.Name.trim() != ''">
+            AND Name LIKE CONCAT('%', #{contactPage.Name}, '%')
+        </if>
+        <if test="contactPage.Address != null and contactPage.Address.trim() != ''">
+            AND Address LIKE CONCAT('%', #{contactPage.Address}, '%')
+        </if>
+        <if test="contactPage.Phone != null and contactPage.Phone.trim() != ''">
+            AND Phone LIKE CONCAT('%', #{contactPage.Phone}, '%')
+        </if>
+    </select>
+
+    <!-- 检查手机号是否存在 -->
+    <select id="phoneExist" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM contact WHERE phone = #{phone}
+    </select>
+
+</mapper>
